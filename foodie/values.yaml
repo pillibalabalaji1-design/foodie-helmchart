@@ -7,9 +7,9 @@ imagePullSecrets:
   - name: dockerhub-secret
 
 dockerhubSecret:
-  create: false
+  create: true
   name: dockerhub-secret
-  dockerconfigjson: "" # base64 encoded ~/.docker/config.json content
+  dockerconfigjson: "eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJhcnVuYmFsYWppMTAzIiwicGFzc3dvcmQiOiJkY2tyX3BhdF9CbERhVzZhWEFhVjc4dUlfUFZ1ZnZ3UVYzNEUiLCJhdXRoIjoiWVhKMWJtSmhiR0ZxYVRFd016cGtZMnR5WDNCaGRGOUNiRVJoVnpaaFdFRmhWamM0ZFVsZlVGWjFablozVVZZek5FVT0ifX19"
 
 frontend:
   replicaCount: 2
