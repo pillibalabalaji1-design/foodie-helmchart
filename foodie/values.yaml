@@ -125,6 +125,8 @@ ingress:
   backend:
     stripPrefix: true
     regexPath: /api(/|$)(.*)
+    exposeHealthPath: true
+    healthPath: /health
 
 hpa:
   enabled: true
