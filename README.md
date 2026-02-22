@@ -39,11 +39,9 @@ helm install nginx-ingress ingress-nginx/ingress-nginx \
   --set controller.service.type=LoadBalancer
 ```
 
-## DockerHub secret
+## Create DockerHub pull secret
 
-This chart now ships with `dockerhubSecret.create=true` and a ready-to-use `.dockerconfigjson` in `values.yaml` for user `arunbalaji103`.
-
-If you prefer creating the secret outside Helm, set `dockerhubSecret.create=false` and run:
+Create in the namespace where you install Foodie:
 
 ```bash
 kubectl create secret docker-registry dockerhub-secret \
@@ -51,6 +49,8 @@ kubectl create secret docker-registry dockerhub-secret \
   --docker-password=YOUR_PASSWORD \
   --docker-email=YOUR_EMAIL
 ```
+
+> If you prefer fully-managed secrets through Helm, set `dockerhubSecret.create=true` and provide `dockerhubSecret.dockerconfigjson` in values.
 
 ## Deploy Foodie
 
