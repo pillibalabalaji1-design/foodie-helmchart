@@ -22,7 +22,11 @@ frontend:
     type: ClusterIP
     port: 80
     targetPort: 3000
-  env: {}
+  env:
+    API_BASE_URL: /api
+    REACT_APP_API_URL: /api
+    NEXT_PUBLIC_API_URL: /api
+    VITE_API_URL: /api
   resources:
     requests:
       cpu: 100m
@@ -59,7 +63,7 @@ backend:
     JWT_SECRET: change-me-in-production
     ADMIN_EMAIL: admin@foodie.com
     ADMIN_PASSWORD: "Areti123$"
-    CORS_ORIGIN: https://foodie.kitchen
+    CORS_ORIGIN: https://www.foodie.kitchen
   resources:
     requests:
       cpu: 150m
