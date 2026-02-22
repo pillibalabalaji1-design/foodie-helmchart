@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "foodie.componentFullname" (dict "context" . "component" "database") }}
+  namespace: {{ include "foodie.namespace" . }}
+  labels:
+    {{- include "foodie.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  clusterIP: None
+  type: {{ .Values.database.service.type }}
+  ports:
+    - port: {{ .Values.database.service.port }}
+      targetPort: {{ .Values.database.service.targetPort }}
+      protocol: TCP
+      name: db
+  selector:
+    {{- include "foodie.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: database

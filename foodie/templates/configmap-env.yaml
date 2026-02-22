@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "foodie.componentFullname" (dict "context" . "component" "env") }}
+  namespace: {{ include "foodie.namespace" . }}
+  labels:
+    {{- include "foodie.labels" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.backend.env }}
+  BACKEND_{{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- range $key, $value := .Values.frontend.env }}
+  FRONTEND_{{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- range $key, $value := .Values.database.env }}
+  DATABASE_{{ $key }}: {{ $value | quote }}
+  {{- end }}

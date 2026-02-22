@@ -1,0 +1,39 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "foodie.componentFullname" (dict "context" . "component" "ingress") }}
+  namespace: {{ include "foodie.namespace" . }}
+  labels:
+    {{- include "foodie.labels" . | nindent 4 }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.backendPath }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "foodie.componentFullname" (dict "context" . "component" "backend") }}
+                port:
+                  number: {{ .Values.backend.service.port }}
+          - path: {{ .Values.ingress.frontendPath }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "foodie.componentFullname" (dict "context" . "component" "frontend") }}
+                port:
+                  number: {{ .Values.frontend.service.port }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+  {{- end }}
+{{- end }}
