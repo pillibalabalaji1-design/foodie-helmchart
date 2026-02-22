@@ -87,7 +87,7 @@ database:
     POSTGRES_USER: foodie
     POSTGRES_PASSWORD: foodiepassword
   persistence:
-    enabled: true
+    enabled: false
     accessModes:
       - ReadWriteOnce
     size: 10Gi
