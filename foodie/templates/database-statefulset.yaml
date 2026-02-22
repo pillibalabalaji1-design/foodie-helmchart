@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "foodie.componentFullname" (dict "context" . "component" "database") }}
+  namespace: {{ include "foodie.namespace" . }}
+  labels:
+    {{- include "foodie.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  serviceName: {{ include "foodie.componentFullname" (dict "context" . "component" "database") }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "foodie.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: database
+  template:
+    metadata:
+      labels:
+        {{- include "foodie.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: database
+    spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      containers:
+        - name: database
+          image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+          imagePullPolicy: {{ .Values.database.image.pullPolicy }}
+          ports:
+            - name: db
+              containerPort: {{ .Values.database.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "foodie.componentFullname" (dict "context" . "component" "env") }}
+                  key: DATABASE_POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "foodie.componentFullname" (dict "context" . "component" "env") }}
+                  key: DATABASE_POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "foodie.componentFullname" (dict "context" . "component" "env") }}
+                  key: DATABASE_POSTGRES_PASSWORD
+          resources:
+            {{- toYaml .Values.database.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          {{- toYaml .Values.database.persistence.accessModes | nindent 10 }}
+        {{- if .Values.database.persistence.storageClassName }}
+        storageClassName: {{ .Values.database.persistence.storageClassName }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.database.persistence.size }}

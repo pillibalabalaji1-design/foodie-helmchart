@@ -1,0 +1,13 @@
+apiVersion: v2
+name: foodie
+description: Production-ready Helm chart for the Foodie cloud kitchen application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - foodie
+  - cloud-kitchen
+  - ingress
+  - nginx
+maintainers:
+  - name: foodie-team
