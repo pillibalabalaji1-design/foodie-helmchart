@@ -36,7 +36,7 @@ spec:
             - name: {{ $key }}
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "foodie.componentFullname" (dict "context" . "component" "env") }}
+                  name: {{ include "foodie.componentFullname" (dict "context" $ "component" "env") }}
                   key: BACKEND_{{ $key }}
             {{- end }}
             {{- end }}
