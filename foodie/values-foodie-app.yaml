@@ -1,0 +1,124 @@
+nameOverride: ""
+fullnameOverride: ""
+
+namespaceOverride: "foodie-app"
+
+imagePullSecrets:
+  - name: dockerhub-secret
+
+dockerhubSecret:
+  create: true
+  name: dockerhub-secret
+  dockerconfigjson: "eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJhcnVuYmFsYWppMTAzIiwicGFzc3dvcmQiOiJkY2tyX3BhdF9CbERhVzZhWEFhVjc4dUlfUFZ1ZnZ3UVYzNEUiLCJhdXRoIjoiWVhKMWJtSmhiR0ZxYVRFd016cGtZMnR5WDNCaGRGOUNiRVJoVnpaaFdFRmhWamM0ZFVsZlVGWjFablozVVZZek5FVT0ifX19"
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: arunbalaji103/foodie-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  env: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 256Mi
+  livenessProbe:
+    path: /
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    path: /
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+backend:
+  replicaCount: 2
+  image:
+    repository: arunbalaji103/foodie-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 5000
+    targetPort: 5000
+  env: {}
+  resources:
+    requests:
+      cpu: 150m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  livenessProbe:
+    path: /health
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    path: /health
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+database:
+  image:
+    repository: arunbalaji103/foodie-database
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 5432
+    targetPort: 5432
+  env:
+    POSTGRES_DB: foodie
+    POSTGRES_USER: foodie
+    POSTGRES_PASSWORD: foodiepassword
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    storageClassName: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  host: foodie.kitchen
+  tls:
+    enabled: false
+    secretName: foodie-tls
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+  frontendPath: /
+  backendPath: /api
+
+hpa:
+  enabled: true
+  frontend:
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+  backend:
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 75
