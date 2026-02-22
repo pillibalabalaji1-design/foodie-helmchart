@@ -11,6 +11,7 @@ data:
   {{- end }}
   {{- range $key, $value := .Values.frontend.env }}
   FRONTEND_{{ $key }}: {{ $value | quote }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- range $key, $value := .Values.database.env }}
   DATABASE_{{ $key }}: {{ $value | quote }}
