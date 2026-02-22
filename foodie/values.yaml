@@ -114,6 +114,7 @@ ingress:
 
 hpa:
   enabled: true
+  apiVersion: autoscaling/v1
   frontend:
     minReplicas: 2
     maxReplicas: 5
