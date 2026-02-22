@@ -22,7 +22,11 @@ frontend:
     type: ClusterIP
     port: 80
     targetPort: 3000
-  env: {}
+  env:
+    API_BASE_URL: /api
+    REACT_APP_API_URL: /api
+    NEXT_PUBLIC_API_URL: /api
+    VITE_API_URL: /api
   resources:
     requests:
       cpu: 100m
@@ -118,6 +122,9 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
   frontendPath: /
   backendPath: /api
+  backend:
+    stripPrefix: true
+    regexPath: /api(/|$)(.*)
 
 hpa:
   enabled: true
