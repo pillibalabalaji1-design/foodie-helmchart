@@ -28,9 +28,18 @@ spec:
             - name: http
               containerPort: {{ .Values.backend.service.targetPort }}
               protocol: TCP
-          envFrom:
-            - configMapRef:
-                name: {{ include "foodie.componentFullname" (dict "context" . "component" "env") }}
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://{{ .Values.database.env.POSTGRES_USER }}:{{ .Values.database.env.POSTGRES_PASSWORD }}@{{ include \"foodie.componentFullname\" (dict \"context\" . \"component\" \"database\") }}:{{ .Values.database.service.port }}/{{ .Values.database.env.POSTGRES_DB }}?schema=public"
+            {{- range $key, $value := .Values.backend.env }}
+            {{- if ne $key "DATABASE_URL" }}
+            - name: {{ $key }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "foodie.componentFullname" (dict "context" . "component" "env") }}
+                  key: BACKEND_{{ $key }}
+            {{- end }}
+            {{- end }}
           livenessProbe:
             httpGet:
               path: {{ .Values.backend.livenessProbe.path }}

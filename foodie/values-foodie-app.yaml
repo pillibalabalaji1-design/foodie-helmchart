@@ -87,7 +87,7 @@ database:
     POSTGRES_USER: foodie
     POSTGRES_PASSWORD: foodiepassword
   persistence:
-    enabled: true
+    enabled: false
     accessModes:
       - ReadWriteOnce
     size: 10Gi
@@ -114,6 +114,7 @@ ingress:
 
 hpa:
   enabled: true
+  apiVersion: autoscaling/v1
   frontend:
     minReplicas: 2
     maxReplicas: 5
