@@ -30,7 +30,7 @@ spec:
               protocol: TCP
           env:
             - name: DATABASE_URL
-              value: "postgresql://{{ .Values.database.env.POSTGRES_USER }}:{{ .Values.database.env.POSTGRES_PASSWORD }}@{{ include \"foodie.componentFullname\" (dict \"context\" . \"component\" \"database\") }}:{{ .Values.database.service.port }}/{{ .Values.database.env.POSTGRES_DB }}?schema=public"
+              value: "postgresql://{{ .Values.database.env.POSTGRES_USER }}:{{ .Values.database.env.POSTGRES_PASSWORD }}@{{ include "foodie.componentFullname" (dict "context" . "component" "database") }}:{{ .Values.database.service.port }}/{{ .Values.database.env.POSTGRES_DB }}?schema=public"
             {{- range $key, $value := .Values.backend.env }}
             {{- if ne $key "DATABASE_URL" }}
             - name: {{ $key }}

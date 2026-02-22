@@ -52,7 +52,13 @@ backend:
     type: ClusterIP
     port: 5000
     targetPort: 5000
-  env: {}
+  env:
+    NODE_ENV: production
+    PORT: "5000"
+    JWT_SECRET: change-me-in-production
+    ADMIN_EMAIL: admin@foodie.com
+    ADMIN_PASSWORD: "Areti123$"
+    CORS_ORIGIN: https://foodie.kitchen
   resources:
     requests:
       cpu: 150m
