@@ -10,19 +10,32 @@ metadata:
     {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
+    {{- if .Values.ingress.backend.stripPrefix }}
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+    {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
     - host: {{ required "Set ingress.host to your real domain (for example: foodie.kitchen)" .Values.ingress.host }}
       http:
         paths:
-          - path: {{ .Values.ingress.backendPath }}
+          - path: {{ if .Values.ingress.backend.stripPrefix }}{{ .Values.ingress.backend.regexPath }}{{ else }}{{ .Values.ingress.backendPath }}{{ end }}
+            pathType: {{ if .Values.ingress.backend.stripPrefix }}ImplementationSpecific{{ else }}Prefix{{ end }}
+            backend:
+              service:
+                name: {{ include "foodie.componentFullname" (dict "context" . "component" "backend") }}
+                port:
+                  number: {{ .Values.backend.service.port }}
+          {{- if .Values.ingress.backend.exposeHealthPath }}
+          - path: {{ .Values.ingress.backend.healthPath }}
             pathType: Prefix
             backend:
               service:
                 name: {{ include "foodie.componentFullname" (dict "context" . "component" "backend") }}
                 port:
                   number: {{ .Values.backend.service.port }}
+          {{- end }}
           - path: {{ .Values.ingress.frontendPath }}
             pathType: Prefix
             backend:
