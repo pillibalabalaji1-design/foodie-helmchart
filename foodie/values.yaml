@@ -122,6 +122,9 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
   frontendPath: /
   backendPath: /api
+  backend:
+    stripPrefix: true
+    regexPath: /api(/|$)(.*)
 
 hpa:
   enabled: true
