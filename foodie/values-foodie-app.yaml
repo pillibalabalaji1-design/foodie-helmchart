@@ -110,7 +110,7 @@ database:
 ingress:
   enabled: true
   className: nginx
-  host: foodie.kitchen
+  host: www.foodie.kitchen
   tls:
     enabled: false
     secretName: foodie-tls
