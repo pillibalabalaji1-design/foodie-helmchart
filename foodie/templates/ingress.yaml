@@ -22,6 +22,7 @@ spec:
         paths:
           - path: {{ if .Values.ingress.backend.stripPrefix }}{{ .Values.ingress.backend.regexPath }}{{ else }}{{ .Values.ingress.backendPath }}{{ end }}
             pathType: {{ if .Values.ingress.backend.stripPrefix }}ImplementationSpecific{{ else }}Prefix{{ end }}
+<<<<<<< codex/debug-backend-service-not-responding-2ud162
             backend:
               service:
                 name: {{ include "foodie.componentFullname" (dict "context" . "component" "backend") }}
@@ -30,6 +31,8 @@ spec:
           {{- if .Values.ingress.backend.exposeHealthPath }}
           - path: {{ .Values.ingress.backend.healthPath }}
             pathType: Prefix
+=======
+>>>>>>> main
             backend:
               service:
                 name: {{ include "foodie.componentFullname" (dict "context" . "component" "backend") }}

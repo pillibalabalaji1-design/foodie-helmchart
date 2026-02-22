@@ -63,7 +63,11 @@ backend:
     JWT_SECRET: change-me-in-production
     ADMIN_EMAIL: admin@foodie.com
     ADMIN_PASSWORD: "Areti123$"
+<<<<<<< codex/debug-backend-service-not-responding-2ud162
     CORS_ORIGIN: https://www.foodie.kitchen
+=======
+    CORS_ORIGIN: http://www.foodie.kitchen
+>>>>>>> main
   resources:
     requests:
       cpu: 150m
@@ -126,8 +130,11 @@ ingress:
   backend:
     stripPrefix: true
     regexPath: /api(/|$)(.*)
+<<<<<<< codex/debug-backend-service-not-responding-2ud162
     exposeHealthPath: true
     healthPath: /health
+=======
+>>>>>>> main
 
 hpa:
   enabled: true
