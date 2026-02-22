@@ -65,3 +65,31 @@ helm install foodie ./foodie --namespace foodie --create-namespace
 - database runs as `StatefulSet` with PVC and is internal only (`ClusterIP` headless service)
 
 Only the ingress controller is internet-facing (`LoadBalancer`).
+
+
+## Use your own domain (GoDaddy + NGINX Ingress)
+
+1. Get the NGINX Ingress external address:
+
+```bash
+kubectl get svc -n ingress-nginx
+```
+
+2. In GoDaddy DNS:
+- If you use root domain (`example.com`): create/update an **A** record to the ingress LoadBalancer IP.
+- If you use subdomain (`app.example.com`): create/update a **CNAME** record to the ingress LoadBalancer hostname.
+
+3. Set your chart host to that domain in values:
+
+```yaml
+ingress:
+  host: app.example.com
+```
+
+4. Sync/redeploy the chart and verify:
+
+```bash
+kubectl get ingress -n foodie-app
+```
+
+> Frontend container listens on port `3000`; service/ingress still expose HTTP port `80` externally.

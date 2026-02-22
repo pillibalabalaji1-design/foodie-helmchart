@@ -17,6 +17,7 @@ frontend:
     repository: arunbalaji103/foodie-frontend
     tag: latest
     pullPolicy: IfNotPresent
+  containerPort: 3000
   service:
     type: ClusterIP
     port: 80
